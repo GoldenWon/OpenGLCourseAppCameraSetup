@@ -1,0 +1,3 @@
+# OpenGLCourseAppCameraSetup
+
+This app adds a Camera Object to traverse the world...
