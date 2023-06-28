@@ -7,6 +7,11 @@ MyWindow::MyWindow()
 	bufferWidth = 0;
 	bufferHeight = 0;
 	mainWindow = 0;
+
+	for (size_t i = 0; i < 1024; i++)
+	{
+		keys[i] = 0;
+	}
 }
 
 MyWindow::MyWindow(GLint windowWidth, GLint windowHeight)
@@ -51,6 +56,9 @@ int MyWindow::initialise()
 	// Set conext for GLFW to use
 	glfwMakeContextCurrent(mainWindow);
 
+	// Handle Key + Mouse Input
+	createCallbacks();
+
 	// Allow modern extension features
 	glewExperimental = GL_TRUE;
 
@@ -68,7 +76,51 @@ int MyWindow::initialise()
 	// Setup Viewport size
 	glViewport(0, 0, bufferWidth, bufferHeight);
 
+	glfwSetWindowUserPointer(mainWindow, this);
+
 	return 0;
+}
+
+void MyWindow::createCallbacks()
+{
+	glfwSetKeyCallback(mainWindow, handleKeys);
+}
+
+void MyWindow::handleKeys(GLFWwindow* window, int key, int code, int action, int mode)
+{
+	MyWindow* theWindow = static_cast<MyWindow*>(glfwGetWindowUserPointer(window));
+
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+
+	if (key >= 0 && key < 1024)
+	{
+		if (action == GLFW_PRESS)
+		{
+			theWindow->keys[key] = true;
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			theWindow->keys[key] = false;
+		}
+	}
+}
+
+void MyWindow::handelMouse(GLFWwindow* window, double xPos, double yPos)
+{
+	MyWindow* theWindow = static_cast<MyWindow*>(glfwGetWindowUserPointer(window));
+
+	if (theWindow->mouseFirstMoved)
+	{
+		theWindow->lastX = xPos;
+		theWindow->lastY = yPos;
+		theWindow->mouseFirstMoved = false;
+	}
+
+	theWindow->xChange = xPos - theWindow->lastX;
+	theWindow->yChange = theWindow->lastY - yPos;
 }
 
 MyWindow::~MyWindow()
