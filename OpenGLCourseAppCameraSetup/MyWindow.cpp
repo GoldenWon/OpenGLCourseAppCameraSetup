@@ -84,6 +84,7 @@ int MyWindow::initialise()
 void MyWindow::createCallbacks()
 {
 	glfwSetKeyCallback(mainWindow, handleKeys);
+	glfwSetCursorPosCallback(mainWindow, handelMouse);
 }
 
 void MyWindow::handleKeys(GLFWwindow* window, int key, int code, int action, int mode)
@@ -121,6 +122,11 @@ void MyWindow::handelMouse(GLFWwindow* window, double xPos, double yPos)
 
 	theWindow->xChange = xPos - theWindow->lastX;
 	theWindow->yChange = theWindow->lastY - yPos;
+
+	theWindow->lastX = xPos;
+	theWindow->lastY = yPos;
+
+	std::cout << "x: " << theWindow->xChange << "y: " << theWindow->yChange << std::endl;
 }
 
 MyWindow::~MyWindow()
