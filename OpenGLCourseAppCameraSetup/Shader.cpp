@@ -5,6 +5,7 @@ Shader::Shader()
 	shaderID = 0;
 	uniformModel = 0;
 	uniformProjection = 0;
+	uniformView = 0;
 }
 
 void Shader::CreateFromString(const char* vertexCode, const char* fragmentCode)
