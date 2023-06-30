@@ -10,6 +10,7 @@ Camera::Camera()
 
 	moveSpeed = 5.0f;
 	turnSpeed = 1.0f;
+	savedMoveSpeed = moveSpeed;
 
 	update();
 }
@@ -24,6 +25,7 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLf
 
 	moveSpeed = startMoveSpeed;
 	turnSpeed = startTurnSpeed;
+	savedMoveSpeed = moveSpeed;
 
 	update();
 }
@@ -31,6 +33,7 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLf
 void Camera::keyControl(bool* keys, GLfloat deltaTime)
 {
 	GLfloat velocity = moveSpeed * deltaTime;
+	const GLfloat runningSpeed = 25;
 	if (keys[GLFW_KEY_W])
 	{
 		position += front * velocity;
@@ -50,6 +53,37 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
 	{
 		position += right * velocity;
 	}
+
+	if (keys[GLFW_KEY_LEFT_SHIFT])
+	{
+		moveSpeed = runningSpeed;
+	}
+
+	if (!keys[GLFW_KEY_LEFT_SHIFT])
+	{
+		moveSpeed = savedMoveSpeed;
+	}
+}
+
+void Camera::mouseControl(GLfloat xChange, GLfloat yChange)
+{
+	xChange *= turnSpeed;
+	yChange *= turnSpeed;
+
+	yaw += xChange;
+	pitch += yChange;
+
+	if (pitch > 89.0f)
+	{
+		pitch = 89.0f;
+	}
+
+	if (pitch < -89.0f)
+	{
+		pitch = -89.0f;
+	}
+
+	update();
 }
 
 glm::mat4 Camera::calculateViewMatrix()
