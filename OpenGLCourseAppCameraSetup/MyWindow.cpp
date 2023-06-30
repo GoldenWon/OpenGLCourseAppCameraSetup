@@ -7,6 +7,11 @@ MyWindow::MyWindow()
 	bufferWidth = 0;
 	bufferHeight = 0;
 	mainWindow = 0;
+	lastX = 0.0f;
+	lastY = 0.0f;
+	xChange = 0.0f;
+	yChange = 0.0f;
+	mouseFirstMoved = true;
 
 	for (size_t i = 0; i < 1024; i++)
 	{
@@ -21,6 +26,16 @@ MyWindow::MyWindow(GLint windowWidth, GLint windowHeight)
 	bufferWidth = 0;
 	bufferHeight = 0;
 	mainWindow = 0;
+	lastX = 0.0f;
+	lastY = 0.0f;
+	xChange = 0.0f;
+	yChange = 0.0f;
+	mouseFirstMoved = true;
+
+	for (size_t i = 0; i < 1024; i++)
+	{
+		keys[i] = 0;
+	}
 }
 
 int MyWindow::initialise()
@@ -58,6 +73,7 @@ int MyWindow::initialise()
 
 	// Handle Key + Mouse Input
 	createCallbacks();
+	glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// Allow modern extension features
 	glewExperimental = GL_TRUE;
@@ -85,6 +101,20 @@ void MyWindow::createCallbacks()
 {
 	glfwSetKeyCallback(mainWindow, handleKeys);
 	glfwSetCursorPosCallback(mainWindow, handelMouse);
+}
+
+GLfloat MyWindow::getXChange()
+{
+	GLfloat theChange = xChange;
+	xChange = 0.0f;
+	return theChange;
+}
+
+GLfloat MyWindow::getYChange()
+{
+	GLfloat theChange = yChange;
+	yChange = 0.0f;
+	return theChange;
 }
 
 void MyWindow::handleKeys(GLFWwindow* window, int key, int code, int action, int mode)
@@ -126,7 +156,7 @@ void MyWindow::handelMouse(GLFWwindow* window, double xPos, double yPos)
 	theWindow->lastX = xPos;
 	theWindow->lastY = yPos;
 
-	std::cout << "x: " << theWindow->xChange << "y: " << theWindow->yChange << std::endl;
+	//std::cout << "x: " << theWindow->xChange << " y: " << theWindow->yChange << std::endl;
 }
 
 MyWindow::~MyWindow()
